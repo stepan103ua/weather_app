@@ -43,10 +43,10 @@ class _ScreenLayoutState extends State<ScreenLayout> {
         label: 'Home'),
     const NavigationDestination(
         icon: Icon(
-          Icons.favorite_outline,
+          Icons.search
         ),
         selectedIcon: Icon(
-          Icons.favorite_outline,
+          Icons.search,
           color: Colors.pink,
         ),
         label: 'Favorite'),
