@@ -13,7 +13,8 @@ class WeatherImageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconPath = Provider.of<WeatherDataProvider>(context)
-        .currentWeatherData['iconPath'];
+        .weatherData
+        .currentWeatherIconPath;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       child: Image.asset(

@@ -12,8 +12,8 @@ class GeneralInfoContainer extends StatelessWidget {
   final double width;
   @override
   Widget build(BuildContext context) {
-    final weatherData = Provider.of<WeatherDataProvider>(context, listen: false)
-        .currentWeatherData;
+    final weatherData =
+        Provider.of<WeatherDataProvider>(context, listen: false).weatherData;
     return Container(
       padding:
           EdgeInsets.symmetric(vertical: height * 0.1, horizontal: width * 0.1),
@@ -23,15 +23,14 @@ class GeneralInfoContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FittedText(
-            title:
-                '${weatherData['location']}, ${weatherData['isoCountryCode']}',
+            title: '${weatherData.cityName}, ${weatherData.country}',
             height: height * 0.1,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: height * 0.1),
           Consumer(
             builder: (context, value, child) => FittedText(
-              title: weatherData['temp_formatted'],
+              title: weatherData.currentTemperature,
               height: height * 0.3,
               style: Theme.of(context)
                   .textTheme
@@ -41,7 +40,7 @@ class GeneralInfoContainer extends StatelessWidget {
           ),
           SizedBox(height: height * 0.1),
           RoundedContainer(
-            title: weatherData['weatherStatus'],
+            title: weatherData.currentWeatherStatus,
             height: height * 0.2,
           ),
         ],

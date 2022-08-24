@@ -12,13 +12,12 @@ class SpeedTypeProvider with ChangeNotifier {
       return;
     }
     AppSettings.speedType = newSpeedType;
-    final windSpeed = double.parse(
-        Provider.of<WeatherDataProvider>(context, listen: false)
-            .currentWeatherData['wind_speed']
-            .toString());
+    final windSpeed = Provider.of<WeatherDataProvider>(context, listen: false)
+        .weatherData
+        .currentWindSpeedAsDouble;
     Provider.of<WeatherDataProvider>(context, listen: false)
-            .currentWeatherData['wind_speed_formatted'] =
-        Constants.convertSpeed(windSpeed);
+        .weatherData
+        .currentWindSpeed = Constants.convertSpeed(windSpeed);
     notifyListeners();
   }
 }

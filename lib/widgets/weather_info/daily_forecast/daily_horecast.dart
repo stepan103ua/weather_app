@@ -12,15 +12,15 @@ class DailyForecast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dailyData =
-        Provider.of<WeatherDataProvider>(context).dailyWeatherData;
+        Provider.of<WeatherDataProvider>(context).weatherData.dailyWeatherList;
     return Column(
       children: dailyData.map((data) {
         return DailyForecastItem(
           width: width,
-          dayOfWeek: data['day'],
-          maxTemperature: Constants.convertTemperature(data['maxTemp']),
-          minTemperature: Constants.convertTemperature(data['minTemp']),
-          iconPath: data['iconPath'],
+          dayOfWeek: data.day,
+          maxTemperature: data.maxTemperature,
+          minTemperature: data.minTemperature,
+          iconPath: data.iconPath,
         );
       }).toList(),
     );

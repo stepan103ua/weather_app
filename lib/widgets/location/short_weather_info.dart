@@ -12,8 +12,8 @@ class ShortWeatherInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weatherData = Provider.of<WeatherDataProvider>(context, listen: false)
-        .currentWeatherData;
+    final weatherData =
+        Provider.of<WeatherDataProvider>(context, listen: false).weatherData;
     return LayoutBuilder(
       builder: (context, constraints) => Column(
         children: [
@@ -22,7 +22,7 @@ class ShortWeatherInfo extends StatelessWidget {
             child: FittedBox(
               child: Consumer<TempertureTypeProvider>(
                 builder: (context, value, child) => Text(
-                  '${weatherData['temp_formatted']}',
+                  weatherData.currentTemperature,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),

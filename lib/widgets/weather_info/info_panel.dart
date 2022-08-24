@@ -20,8 +20,8 @@ class InfoPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weatherData = Provider.of<WeatherDataProvider>(context, listen: false)
-        .currentWeatherData;
+    final weatherData =
+        Provider.of<WeatherDataProvider>(context, listen: false).weatherData;
     return Container(
       height: height,
       width: width,
@@ -31,18 +31,18 @@ class InfoPanel extends StatelessWidget {
         children: [
           IconWithText(
             icon: WeatherIcons.humidity,
-            text: '${weatherData['humidity']} %',
+            text: '${weatherData.currentHumidity} %',
             width: width * 0.25,
           ),
           IconWithText(
             icon: WeatherIcons.barometer,
-            text: '${weatherData['pressure']} mBar',
+            text: '${weatherData.currentPressure} mBar',
             width: width * 0.25,
           ),
           Consumer<SpeedTypeProvider>(
             builder: (context, value, child) => IconWithText(
               icon: WeatherIcons.windy,
-              text: weatherData['wind_speed_formatted'],
+              text: weatherData.currentWindSpeed,
               width: width * 0.25,
             ),
           ),

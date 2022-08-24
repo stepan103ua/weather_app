@@ -13,12 +13,13 @@ class TempertureTypeProvider with ChangeNotifier {
       return;
     }
     AppSettings.temperatureType = newTemperatureType;
-    var currentLocationTemperature = double.parse(
+    var currentLocationTemperature =
         Provider.of<WeatherDataProvider>(context, listen: false)
-            .currentWeatherData['temp']
-            .toString());
+            .weatherData
+            .currentTemperatureAsDouble;
     Provider.of<WeatherDataProvider>(context, listen: false)
-            .currentWeatherData['temp_formatted'] =
+            .weatherData
+            .currentTemperature =
         Constants.convertTemperature(currentLocationTemperature);
 
     notifyListeners();

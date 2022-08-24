@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/app_settings.dart';
 import 'package:weather_app/constants.dart';
 import 'package:weather_app/custom_navigation_bar.dart';
+import 'package:weather_app/screens/chart_screen.dart';
 import 'package:weather_app/screens/favorites_screen.dart';
 import 'package:weather_app/screens/location_screen.dart';
 import 'package:weather_app/temperature_types.dart';
@@ -22,6 +23,7 @@ class _ScreenLayoutState extends State<ScreenLayout> {
   var _screenIndex = 0;
   final List<Widget> _screensList = [
     const WeatherInfoScreen(),
+    const ChartScreen(),
     const FavoritesScreen(),
     const LocationScreen(),
   ];
@@ -42,18 +44,24 @@ class _ScreenLayoutState extends State<ScreenLayout> {
         ),
         label: 'Home'),
     const NavigationDestination(
-        icon: Icon(
-          Icons.search
-        ),
+      icon: Icon(Icons.bar_chart_rounded),
+      selectedIcon: Icon(
+        Icons.bar_chart_rounded,
+        color: Colors.pink,
+      ),
+      label: 'Chart',
+    ),
+    const NavigationDestination(
+        icon: Icon(Icons.search),
         selectedIcon: Icon(
           Icons.search,
           color: Colors.pink,
         ),
         label: 'Favorite'),
     const NavigationDestination(
-        icon: Icon(Icons.location_searching_outlined),
+        icon: Icon(Icons.settings_rounded),
         selectedIcon: Icon(
-          Icons.location_searching_outlined,
+          Icons.settings_rounded,
           color: Colors.pink,
         ),
         label: 'Location'),

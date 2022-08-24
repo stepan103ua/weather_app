@@ -12,8 +12,8 @@ class LocationInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weatherData = Provider.of<WeatherDataProvider>(context, listen: false)
-        .currentWeatherData;
+    final weatherData =
+        Provider.of<WeatherDataProvider>(context, listen: false).weatherData;
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => const LocationSelectionScreen(),
@@ -38,7 +38,7 @@ class LocationInfo extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text('${weatherData['location']}, ${weatherData['isoCountryCode']}',
+          Text('${weatherData.cityName}, ${weatherData.country}',
               style: Theme.of(context).textTheme.titleMedium),
         ],
       ),

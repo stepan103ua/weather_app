@@ -7,20 +7,18 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/exceptions/weather_location_exception.dart';
+import 'package:weather_app/mixins/weather_mixin.dart';
+import 'package:weather_app/models/weather_data.dart';
 
 import '../constants.dart';
 
-class WeatherDataProvider with ChangeNotifier {
-  final Map<String, dynamic> currentWeatherData = {};
+class WeatherDataProvider with ChangeNotifier, WeatherMixin {
   double? _latitude;
   double? _longitude;
-  List<Map> hourlyWeatherData = [];
-  List<Map> dailyWeatherData = [];
 
-  String _formatData(int utc) {
-    return DateFormat('jm')
-        .format(DateTime.fromMillisecondsSinceEpoch((utc) * 1000));
-  }
+  late WeatherData _weatherData;
+
+  WeatherData get weatherData => _weatherData;
 
   Future<bool> getUserLocationWithGPS() async {
     final permission = await Geolocator.checkPermission();
@@ -114,79 +112,60 @@ class WeatherDataProvider with ChangeNotifier {
     if (_latitude == null || _longitude == null) {
       return false;
     }
-    try {
-      final _api =
-          'https://api.openweathermap.org/data/2.5/onecall?lat=$_latitude&lon=$_longitude&exclude=minutely,alerts&units=metric&appid=6c6663b3cf43fb8dd64a8bb0fbee5c3a';
+    // try {
+    final api =
+        'https://api.openweathermap.org/data/2.5/onecall?lat=$_latitude&lon=$_longitude&exclude=minutely,alerts&units=metric&appid=6c6663b3cf43fb8dd64a8bb0fbee5c3a';
 
-      response = await http.get(Uri.parse(_api));
+    response = await http.get(Uri.parse(api));
 
-      final weatherApiData = json.decode(response.body);
-      final currentApiData = weatherApiData['current'];
-      final timezoneOffset = weatherApiData['timezone_offset'];
-      final address = await GeocodingPlatform.instance
-          .placemarkFromCoordinates(
-              weatherApiData['lat'], weatherApiData['lon'],
-              localeIdentifier: 'en')
-          .timeout(const Duration(seconds: 30));
-      currentWeatherData['location'] = address.first.locality;
-      currentWeatherData['isoCountryCode'] = address.first.isoCountryCode;
-      currentWeatherData['sunrise'] = _formatData(currentApiData['sunrise']);
-      currentWeatherData['sunset'] = _formatData(currentApiData['sunset']);
-      currentWeatherData['temp'] =
-          double.parse(currentApiData['temp'].toString());
-      currentWeatherData['temp_formatted'] =
-          Constants.convertTemperature(currentWeatherData['temp']);
-      currentWeatherData['pressure'] = currentApiData['pressure'];
-      currentWeatherData['humidity'] = currentApiData['humidity'];
-      currentWeatherData['wind_speed'] =
-          double.parse(currentApiData['wind_speed'].toString());
-      currentWeatherData['wind_speed_formatted'] =
-          Constants.convertSpeed(currentApiData['wind_speed']);
-      currentWeatherData['weatherStatus'] =
-          currentApiData['weather'][0]['main'];
-      currentWeatherData['iconPath'] =
-          Constants.getIconPath(currentApiData['weather'][0]['icon']);
+    final weatherApiData = json.decode(response.body);
+    final currentApiData = weatherApiData['current'];
+    final timezoneOffset = weatherApiData['timezone_offset'];
+    final address = await getAddressData(_latitude!, _longitude!);
+    final location = address.locality;
+    final countryCode = address.isoCountryCode;
+    print(response.body);
+    final sunriseTime = formatDate(currentApiData['sunrise']);
+    final sunsetTime = formatDate(currentApiData['sunset']);
+    final temperatureAsDouble = double.parse(currentApiData['temp'].toString());
+    final currentTemperature =
+        Constants.convertTemperature(temperatureAsDouble);
+    final currentPressure = currentApiData['pressure'].toString();
+    final currentHumidity = currentApiData['humidity'].toString();
+    final windSpeedASDouble =
+        double.parse(currentApiData['wind_speed'].toString());
+    final currentWindSpeed =
+        Constants.convertSpeed(currentApiData['wind_speed']);
+    final currentWeatherStatus = currentApiData['weather'][0]['main'];
+    final currentWeathericonPath =
+        Constants.getIconPath(currentApiData['weather'][0]['icon']);
 
-      final hourlyApiData = weatherApiData['hourly'] as List;
-      hourlyWeatherData = hourlyApiData.where((apiData) {
-        final date =
-            DateTime.fromMillisecondsSinceEpoch((apiData['dt']) * 1000);
-        return date.isAfter(DateTime.now()) &&
-            date.isBefore(DateTime.now().add(const Duration(hours: 24)));
-      }).map((apiData) {
-        final hourData = {};
-        hourData['time'] = _formatData(apiData['dt']);
-        hourData['temp'] = double.parse(apiData['temp'].toString());
-        hourData['iconPath'] =
-            Constants.getIconPath(apiData['weather'][0]['icon']);
-        return hourData;
-      }).toList();
+    final hourlyApiData = weatherApiData['hourly'] as List;
+    final hourlyWeatherData = getHourlyWeatherData(hourlyApiData);
 
-      final dailyApiData = weatherApiData['daily'] as List;
+    final dailyApiData = weatherApiData['daily'] as List;
 
-      dailyWeatherData = dailyApiData
-          .map((apiData) {
-            final dayData = {};
-            dayData['day'] = DateFormat('EEEE').format(
-                DateTime.fromMillisecondsSinceEpoch(apiData['dt'] * 1000));
-            dayData['maxTemp'] =
-                double.parse(apiData['temp']['max'].toString());
-            dayData['minTemp'] =
-                double.parse(apiData['temp']['min'].toString());
-            dayData['iconPath'] =
-                Constants.getIconPath(apiData['weather'][0]['icon']);
-            return dayData;
-          })
-          .skip(1)
-          .toList();
-    } catch (error) {
-      print(error);
-      return false;
-    }
-
-    if (response.statusCode >= 400 || currentWeatherData.isEmpty) {
-      return false;
-    }
+    final dailyWeather = getDailyWeatherData(dailyApiData);
+    _weatherData = WeatherData(
+      cityName: location!,
+      country: countryCode!,
+      currentWeatherStatus: currentWeatherStatus,
+      currentWeatherIconPath: currentWeathericonPath,
+      currentTemperature: currentTemperature,
+      currentTemperatureAsDouble: temperatureAsDouble,
+      currentHumidity: currentHumidity,
+      currentWindSpeed: currentWindSpeed,
+      currentWindSpeedAsDouble: windSpeedASDouble,
+      currentPressure: currentPressure,
+      sunriseTime: sunriseTime,
+      sunsetTime: sunsetTime,
+      hourlyWeatherList: hourlyWeatherData,
+      dailyWeatherList: dailyWeather,
+    );
+    // } catch (error) {
+    //   print(error);
+    //   return false;
+    // }
 
     return true;
   }

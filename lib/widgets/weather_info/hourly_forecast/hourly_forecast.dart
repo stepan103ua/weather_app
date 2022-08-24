@@ -16,7 +16,7 @@ class HourlyForecast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hourlyData =
-        Provider.of<WeatherDataProvider>(context).hourlyWeatherData;
+        Provider.of<WeatherDataProvider>(context).weatherData.hourlyWeatherList;
     return Container(
       height: height,
       width: width,
@@ -38,10 +38,9 @@ class HourlyForecast extends StatelessWidget {
               itemCount: hourlyData.length,
               itemBuilder: (context, index) => HourlyForecastItem(
                 height: height * 0.7,
-                time: hourlyData[index]['time'],
-                temperature:
-                    Constants.convertTemperature(hourlyData[index]['temp']),
-                iconPath: hourlyData[index]['iconPath'],
+                time: hourlyData[index].time,
+                temperature: hourlyData[index].temperature,
+                iconPath: hourlyData[index].iconPath,
               ),
               separatorBuilder: (context, index) => const SizedBox(width: 20),
             ),
