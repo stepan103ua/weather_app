@@ -47,7 +47,6 @@ mixin WeatherMixin {
       final humidity = double.parse(apiData['humidity'].toString());
       final windSpeed = double.parse(apiData['wind_speed'].toString());
       final temperatureAsDouble = double.parse(apiData['temp'].toString());
-      final temperature = Constants.convertTemperature(temperatureAsDouble);
       final iconPath = Constants.getIconPath(apiData['weather'][0]['icon']);
       return HourlyWeatherData(
         time: time,
@@ -67,17 +66,38 @@ mixin WeatherMixin {
           (apiData) {
             final day = DateFormat('EEEE').format(
                 DateTime.fromMillisecondsSinceEpoch(apiData['dt'] * 1000));
-            final maxTemperature = Constants.convertTemperature(
-                double.parse(apiData['temp']['max'].toString()));
-            final minTemperature = Constants.convertTemperature(
-                double.parse(apiData['temp']['min'].toString()));
+            final maxTemperature =
+                double.parse(apiData['temp']['max'].toString());
+            final minTemperature =
+                double.parse(apiData['temp']['min'].toString());
+            final dayTemperature =
+                double.parse(apiData['temp']['day'].toString());
+            final nightTemperature =
+                double.parse(apiData['temp']['night'].toString());
+            final morningTemperature =
+                double.parse(apiData['temp']['morn'].toString());
+            final eveningTemperature =
+                double.parse(apiData['temp']['eve'].toString());
+            final humidity = double.parse(apiData['humidity'].toString());
+            final pressure = double.parse(apiData['pressure'].toString());
+            final windSpeed = double.parse(apiData['wind_speed'].toString());
             final iconPath =
                 Constants.getIconPath(apiData['weather'][0]['icon']);
             return DailyWeatherData(
-                day: day,
-                maxTemperature: maxTemperature,
-                minTemperature: minTemperature,
-                iconPath: iconPath);
+              day: day,
+              maxTemperature: Constants.convertTemperature(maxTemperature),
+              minTemperature: Constants.convertTemperature(minTemperature),
+              maxTemperatureAsDouble: maxTemperature,
+              minTemperatureAsDouble: minTemperature,
+              dayTemperatureAsDouble: dayTemperature,
+              nightTemperatureAsDouble: nightTemperature,
+              morningTemperatureAsDouble: morningTemperature,
+              eveningTemperatureAsDouble: eveningTemperature,
+              humidityAsDouble: humidity,
+              pressureAsDouble: pressure,
+              windSpeedAsDouble: windSpeed,
+              iconPath: iconPath,
+            );
           },
         )
         .skip(1)

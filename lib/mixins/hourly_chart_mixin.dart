@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:weather_app/constants.dart';
-import 'package:weather_app/enums/chart_filters.dart';
+import 'package:weather_app/enums/chart_hourly_filters.dart';
 
 import '../models/hourly_weather_data.dart';
 
-mixin ChartMixin {
+mixin HourlyChartMixin {
   var maxY = double.minPositive;
   var minY = double.maxFinite;
   var spotsList = <FlSpot>[];
 
-  void calculateHours(ChartFilters filters, List<HourlyWeatherData> dataList) {
+  void calculateHours(
+      ChartHourlyFilters filters, List<HourlyWeatherData> dataList) {
     calculateSpots(filters, dataList);
     calculateMaxAndMinY(filters);
   }
 
-  void calculateMaxAndMinY(ChartFilters filters) {
+  void calculateMaxAndMinY(ChartHourlyFilters filters) {
     var maxValue = double.minPositive;
     var minValue = double.maxFinite;
     for (final spot in spotsList) {
@@ -30,19 +31,19 @@ mixin ChartMixin {
       }
     }
     switch (filters) {
-      case ChartFilters.byTemperature:
+      case ChartHourlyFilters.byTemperature:
         maxValue += 5;
         minValue -= 5;
         break;
-      case ChartFilters.byHumidity:
+      case ChartHourlyFilters.byHumidity:
         maxValue = 100;
         minValue = 0;
         break;
-      case ChartFilters.byPressure:
+      case ChartHourlyFilters.byPressure:
         maxValue += 20;
         minValue -= 20;
         break;
-      case ChartFilters.byWindSpeed:
+      case ChartHourlyFilters.byWindSpeed:
         maxValue += 1;
         minValue = 0;
         break;
@@ -51,21 +52,22 @@ mixin ChartMixin {
     minY = minValue;
   }
 
-  void calculateSpots(ChartFilters filters, List<HourlyWeatherData> dataList) {
+  void calculateSpots(
+      ChartHourlyFilters filters, List<HourlyWeatherData> dataList) {
     spotsList = <FlSpot>[];
     for (int i = 0; i < dataList.length; i++) {
       late FlSpot spot;
       switch (filters) {
-        case ChartFilters.byTemperature:
+        case ChartHourlyFilters.byTemperature:
           spot = FlSpot(i.toDouble(), dataList[i].temperatureAsDouble);
           break;
-        case ChartFilters.byHumidity:
+        case ChartHourlyFilters.byHumidity:
           spot = FlSpot(i.toDouble(), dataList[i].humidity);
           break;
-        case ChartFilters.byPressure:
+        case ChartHourlyFilters.byPressure:
           spot = FlSpot(i.toDouble(), dataList[i].pressure);
           break;
-        case ChartFilters.byWindSpeed:
+        case ChartHourlyFilters.byWindSpeed:
           spot = FlSpot(i.toDouble(), dataList[i].windSpeed);
           break;
       }
@@ -74,7 +76,7 @@ mixin ChartMixin {
   }
 
   FlTitlesData getTitleData(
-      ChartFilters filters, List<HourlyWeatherData> dataList) {
+      ChartHourlyFilters filters, List<HourlyWeatherData> dataList) {
     return FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
@@ -100,16 +102,16 @@ mixin ChartMixin {
           getTitlesWidget: (value, meta) {
             late String text;
             switch (filters) {
-              case ChartFilters.byTemperature:
+              case ChartHourlyFilters.byTemperature:
                 text = Constants.convertTemperature(value);
                 break;
-              case ChartFilters.byHumidity:
-                text = '$value %';
+              case ChartHourlyFilters.byHumidity:
+                text = '${value.toStringAsFixed(0)} %';
                 break;
-              case ChartFilters.byPressure:
-                text = '$value mBar';
+              case ChartHourlyFilters.byPressure:
+                text = '${value.toStringAsFixed(0)} mBar';
                 break;
-              case ChartFilters.byWindSpeed:
+              case ChartHourlyFilters.byWindSpeed:
                 text = Constants.convertSpeed(value);
                 break;
             }

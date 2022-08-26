@@ -1,4 +1,4 @@
-enum ChartFilters {
+enum ChartHourlyFilters {
   byTemperature,
   byHumidity,
   byPressure,

@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:weather_app/enums/chart_filters.dart';
+import 'package:weather_app/enums/chart_hourly_filters.dart';
+import 'package:weather_app/widgets/chart/daily_filter_list_item.dart';
 import 'package:weather_app/widgets/chart/filter_list_item.dart';
+import 'package:weather_app/widgets/chart/hourly_filter_list_item.dart';
 
 class FilterList extends StatelessWidget {
-  const FilterList({Key? key}) : super(key: key);
-
+  const FilterList({Key? key, required this.filterListItems}) : super(key: key);
+  final List<Widget> filterListItems;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,25 +18,7 @@ class FilterList extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: const [
-            FilterListItem(
-              title: "By Temperature",
-              filter: ChartFilters.byTemperature,
-            ),
-            FilterListItem(
-              title: "By Humidity",
-              filter: ChartFilters.byHumidity,
-            ),
-            FilterListItem(
-              title: "By Pressure",
-              filter: ChartFilters.byPressure,
-            ),
-            FilterListItem(
-              title: "By Wind Speed",
-              filter: ChartFilters.byWindSpeed,
-              isLast: true,
-            ),
-          ],
+          children: filterListItems,
         ),
       ),
     );
