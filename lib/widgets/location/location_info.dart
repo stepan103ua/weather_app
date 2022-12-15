@@ -38,7 +38,7 @@ class LocationInfo extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text('${weatherData.cityName}, ${weatherData.country}',
+          Text('${weatherData!.cityName}, ${weatherData.country}',
               style: Theme.of(context).textTheme.titleMedium),
         ],
       ),
