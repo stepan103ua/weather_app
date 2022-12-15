@@ -18,7 +18,7 @@ class HourlyLineChart extends StatelessWidget with HourlyChartMixin {
         Provider.of<WeatherDataProvider>(context, listen: false).weatherData;
     return BlocBuilder<HourlyChartCubit, ChartHourlyFilters>(
       builder: (context, state) {
-        calculateHours(state, weatherData.hourlyWeatherList);
+        calculateHours(state, weatherData!.hourlyWeatherList);
         return WeatherChart(
           maxY: maxY,
           minY: minY,

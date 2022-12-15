@@ -10,9 +10,6 @@ import 'package:weather_app/widgets/weather_info/info_panel.dart';
 import 'package:weather_app/widgets/weather_info/weather_header_info.dart';
 import 'package:weather_app/widgets/weather_info/weather_sun_info.dart';
 
-import '../../providers/weather_data_provider.dart';
-import '../general/loading.dart';
-
 class WeatherInfo extends StatelessWidget {
   const WeatherInfo({Key? key}) : super(key: key);
 
@@ -28,8 +25,9 @@ class WeatherInfo extends StatelessWidget {
           InfoPanel(
             height: constraints.maxHeight * 0.1,
             width: constraints.maxWidth,
-            padding:
-                EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.05),
+            padding: EdgeInsets.symmetric(
+              horizontal: constraints.maxWidth * 0.05,
+            ),
           ),
           WeatherSunInfo(
             height: constraints.maxHeight * 0.15,

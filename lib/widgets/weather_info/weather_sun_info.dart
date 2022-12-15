@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/models/weather_data.dart';
 
@@ -19,7 +17,7 @@ class WeatherSunInfo extends StatelessWidget {
         if (!isSun)
           Text(
             data.sunsetTime,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         Image.asset(
           assetPath,
@@ -29,7 +27,7 @@ class WeatherSunInfo extends StatelessWidget {
         if (isSun)
           Text(
             data.sunriseTime,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
       ],
     );
@@ -38,7 +36,7 @@ class WeatherSunInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weatherData =
-        Provider.of<WeatherDataProvider>(context, listen: false).weatherData;
+        Provider.of<WeatherDataProvider>(context, listen: false).weatherData!;
     return CustomPaint(
       painter: CurveLinePainter(),
       child: SizedBox(

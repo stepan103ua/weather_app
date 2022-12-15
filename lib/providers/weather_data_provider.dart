@@ -4,9 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/exceptions/weather_location_exception.dart';
 import 'package:weather_app/mixins/weather_mixin.dart';
 import 'package:weather_app/models/weather_data.dart';
 
@@ -16,9 +14,9 @@ class WeatherDataProvider with ChangeNotifier, WeatherMixin {
   double? _latitude;
   double? _longitude;
 
-  late WeatherData _weatherData;
+  WeatherData? _weatherData;
 
-  WeatherData get weatherData => _weatherData;
+  WeatherData? get weatherData => _weatherData;
 
   Future<bool> getUserLocationWithGPS() async {
     final permission = await Geolocator.checkPermission();
@@ -36,13 +34,11 @@ class WeatherDataProvider with ChangeNotifier, WeatherMixin {
       _latitude = userLocation.latitude;
       _longitude = userLocation.longitude;
     } catch (error) {
-      print(error);
       return false;
     }
     if (_latitude == null || _longitude == null) {
       return false;
     }
-    print('$_latitude $_longitude');
     saveLocation();
     return true;
   }
@@ -55,12 +51,10 @@ class WeatherDataProvider with ChangeNotifier, WeatherMixin {
           .locationFromAddress(cityName, localeIdentifier: 'en');
       address = addresses.first;
     } catch (error) {
-      print(error);
       return false;
     }
     _latitude = address.latitude;
     _longitude = address.longitude;
-    print('$_latitude $_longitude');
     saveLocation();
     return true;
   }
@@ -82,37 +76,33 @@ class WeatherDataProvider with ChangeNotifier, WeatherMixin {
       if (!result) {
         print('Error, not saved');
       }
-      print('Saved');
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 
   Future<void> getLocation() async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
       final jsonData = sharedPreferences.getString('location');
-      print(jsonData == null);
       if (jsonData != null) {
         final Map<String, dynamic>? extractedData = json.decode(jsonData);
         _latitude = extractedData?['latitude'];
         _longitude = extractedData?['longitude'];
       }
-    } catch (error) {
-      print(error);
-    }
+    } catch (_) {}
   }
 
   Future<bool> loadCurrentData() async {
     final http.Response response;
+    print('Latitude: $_latitude, Longitude: $_longitude');
     if (_latitude == null || _longitude == null) {
       await getLocation();
     }
+    print('Latitude: $_latitude, Longitude: $_longitude');
 
     if (_latitude == null || _longitude == null) {
       return false;
     }
-    // try {
+
     final api =
         'https://api.openweathermap.org/data/2.5/onecall?lat=$_latitude&lon=$_longitude&exclude=minutely,alerts&units=metric&appid=6c6663b3cf43fb8dd64a8bb0fbee5c3a';
 
@@ -120,7 +110,6 @@ class WeatherDataProvider with ChangeNotifier, WeatherMixin {
 
     final weatherApiData = json.decode(response.body);
     final currentApiData = weatherApiData['current'];
-    final timezoneOffset = weatherApiData['timezone_offset'];
     final address = await getAddressData(_latitude!, _longitude!);
     final location = address.locality;
     final countryCode = address.isoCountryCode;
@@ -162,10 +151,6 @@ class WeatherDataProvider with ChangeNotifier, WeatherMixin {
       hourlyWeatherList: hourlyWeatherData,
       dailyWeatherList: dailyWeather,
     );
-    // } catch (error) {
-    //   print(error);
-    //   return false;
-    // }
 
     return true;
   }

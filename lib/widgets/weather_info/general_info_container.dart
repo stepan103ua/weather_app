@@ -23,7 +23,7 @@ class GeneralInfoContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FittedText(
-            title: '${weatherData.cityName}, ${weatherData.country}',
+            title: '${weatherData!.cityName}, ${weatherData.country}',
             height: height * 0.1,
             style: Theme.of(context).textTheme.titleMedium,
           ),

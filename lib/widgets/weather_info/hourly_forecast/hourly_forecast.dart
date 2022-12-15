@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/constants.dart';
 import 'package:weather_app/providers/weather_data_provider.dart';
 import 'package:weather_app/widgets/weather_info/fitted_text.dart';
 import 'package:weather_app/widgets/weather_info/hourly_forecast/hourly_forecast_item.dart';
@@ -15,8 +14,9 @@ class HourlyForecast extends StatelessWidget {
   final double width;
   @override
   Widget build(BuildContext context) {
-    final hourlyData =
-        Provider.of<WeatherDataProvider>(context).weatherData.hourlyWeatherList;
+    final hourlyData = Provider.of<WeatherDataProvider>(context)
+        .weatherData!
+        .hourlyWeatherList;
     return Container(
       height: height,
       width: width,

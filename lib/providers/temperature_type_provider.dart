@@ -15,10 +15,10 @@ class TempertureTypeProvider with ChangeNotifier {
     AppSettings.temperatureType = newTemperatureType;
     var currentLocationTemperature =
         Provider.of<WeatherDataProvider>(context, listen: false)
-            .weatherData
+            .weatherData!
             .currentTemperatureAsDouble;
     Provider.of<WeatherDataProvider>(context, listen: false)
-            .weatherData
+            .weatherData!
             .currentTemperature =
         Constants.convertTemperature(currentLocationTemperature);
 

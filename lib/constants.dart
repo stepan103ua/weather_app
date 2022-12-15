@@ -87,8 +87,12 @@ class Constants {
         return "assets/images/rain-low.png";
       case "11n":
         return "assets/images/cloud-rain-lightning.png";
+      case "13d":
+        return "assets/images/snow.png";
+      case "13n":
+        return "assets/images/snow.png";
       default:
-        return "http://openweathermap.org/img/wn/$iconCode@2x.png";
+        return "assets/images/unknown.png";
     }
   }
 }
