@@ -17,6 +17,7 @@ class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
   Future<void> loadAllData(BuildContext context) async {
     await loadAppSettings();
+
     await Provider.of<WeatherDataProvider>(context, listen: false)
         .loadCurrentData();
     await Provider.of<FavoriteCitiesProvider>(context, listen: false)
@@ -51,7 +52,10 @@ class Home extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();
         }
-        if (snapshot.hasData && !(snapshot.data as bool)) {
+        final weatherData =
+            Provider.of<WeatherDataProvider>(context, listen: false)
+                .weatherData;
+        if (weatherData == null) {
           return const LocationSelectionScreen();
         }
         if (snapshot.connectionState == ConnectionState.done) {
