@@ -13,10 +13,10 @@ class SpeedTypeProvider with ChangeNotifier {
     }
     AppSettings.speedType = newSpeedType;
     final windSpeed = Provider.of<WeatherDataProvider>(context, listen: false)
-        .weatherData
+        .weatherData!
         .currentWindSpeedAsDouble;
     Provider.of<WeatherDataProvider>(context, listen: false)
-        .weatherData
+        .weatherData!
         .currentWindSpeed = Constants.convertSpeed(windSpeed);
     notifyListeners();
   }

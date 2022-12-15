@@ -1,8 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:weather_app/constants.dart';
 import 'package:weather_app/enums/chart_hourly_filters.dart';
 

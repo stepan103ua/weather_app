@@ -1,15 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/models/favorite_city_weather.dart';
 import 'package:weather_app/providers/favorite_cities_provider.dart';
 import 'package:weather_app/widgets/favorites/favorites_grid_item.dart';
 import 'package:weather_app/widgets/favorites/search_text_field.dart';
-import 'package:weather_app/widgets/general/custom_progress_indicator.dart';
-import 'package:weather_app/widgets/general/error.dart';
-import 'package:weather_app/widgets/general/loading.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -32,7 +26,7 @@ class FavoritesScreen extends StatelessWidget {
                 child: Consumer<FavoriteCitiesProvider>(
                   builder: (context, value, child) => GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: constraints.maxWidth * 0.4,
+                        maxCrossAxisExtent: constraints.maxWidth * 0.45,
                         crossAxisSpacing: 20,
                         mainAxisSpacing: 20),
                     itemBuilder: (context, index) {

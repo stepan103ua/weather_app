@@ -15,7 +15,7 @@ class DailyLineChart extends StatelessWidget with DailyChartMixin {
   Widget build(BuildContext context) {
     final dailyWeatherData =
         Provider.of<WeatherDataProvider>(context, listen: false)
-            .weatherData
+            .weatherData!
             .dailyWeatherList;
 
     return BlocBuilder<DailyChartFiltersCubit, ChartDailyFilters>(
